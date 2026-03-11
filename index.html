@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Atrapa el Círculo</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:linear-gradient(135deg,#6a11cb,#2575fc);
+color:white;
+}
+
+h1{
+margin-top:20px;
+}
+
+#gameArea{
+width:320px;
+height:420px;
+margin:auto;
+border-radius:15px;
+background:white;
+position:relative;
+overflow:hidden;
+}
+
+#circle{
+width:60px;
+height:60px;
+background:red;
+border-radius:50%;
+position:absolute;
+cursor:pointer;
+transition:0.2s;
+}
+
+#panel{
+margin:15px;
+}
+
+button{
+padding:10px 20px;
+font-size:16px;
+border:none;
+border-radius:10px;
+background:#ffcc00;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Atrapa el Círculo</h1>
+
+<div id="panel">
+Puntos: <span id="score">0</span> |
+Tiempo: <span id="time">30</span> |
+Récord: <span id="record">0</span>
+</div>
+
+<div id="gameArea">
+<div id="circle"></div>
+</div>
+
+<br>
+
+<button onclick="startGame()">Iniciar Juego</button>
+
+<script>
+
+let score = 0
+let time = 30
+let record = localStorage.getItem("record") || 0
+
+document.getElementById("record").innerText = record
+
+let gameInterval
+let timerInterval
+
+const circle = document.getElementById("circle")
+
+function moveCircle(){
+
+let size = Math.random()*40 + 30
+
+circle.style.width = size+"px"
+circle.style.height = size+"px"
+
+let x = Math.random()*260
+let y = Math.random()*350
+
+circle.style.left = x+"px"
+circle.style.top = y+"px"
+
+}
+
+circle.onclick = function(){
+
+score++
+
+document.getElementById("score").innerText = score
+
+moveCircle()
+
+}
+
+function startGame(){
+
+score = 0
+time = 30
+
+document.getElementById("score").innerText = score
+document.getElementById("time").innerText = time
+
+moveCircle()
+
+gameInterval = setInterval(moveCircle,900)
+
+timerInterval = setInterval(function(){
+
+time--
+
+document.getElementById("time").innerText = time
+
+if(time<=0){
+
+clearInterval(gameInterval)
+clearInterval(timerInterval)
+
+if(score>record){
+
+record = score
+localStorage.setItem("record",record)
+
+}
+
+document.getElementById("record").innerText = record
+
+alert("Juego terminado. Puntos: "+score)
+
+}
+
+},1000)
+
+}
+
+</script>
+
+</body>
+</html>
